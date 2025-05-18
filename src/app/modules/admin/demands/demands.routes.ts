@@ -7,8 +7,8 @@ import {
 } from '@angular/router';
 import { TasksDetailsComponent } from './details/details.component'; 
 import { TasksListComponent } from './list/list.component'; 
-import { TasksComponent } from './tasks.component'; 
-import { TasksService } from './tasks.service'; 
+import { TasksComponent } from './demands.component'; 
+import { TasksService } from './demands.service'; 
 import { catchError, throwError } from 'rxjs';
 
 /**
@@ -65,7 +65,7 @@ const canDeactivateTasksDetails = (
     // If the next state doesn't contain '/tasks'
     // it means we are navigating away from the
     // tasks app
-    if (!nextState.url.includes('/tasks')) {
+    if (!nextState.url.includes('/demands')) {
         // Let it navigate
         return true;
     }
@@ -84,9 +84,6 @@ export default [
     {
         path: '',
         component: TasksComponent,
-        resolve: {
-            tags: () => inject(TasksService).getTags(),
-        },
         children: [
             {
                 path: '',

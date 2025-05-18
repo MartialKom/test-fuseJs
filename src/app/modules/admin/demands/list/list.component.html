@@ -27,46 +27,34 @@
                         <div
                             class="text-4xl font-extrabold leading-none tracking-tight"
                         >
-                            Tasks
+                            User Demands
                         </div>
                         <div class="text-secondary ml-0.5 font-medium">
                             @if (tasksCount.incomplete === 0) {
-                                <span>All tasks completed!</span>
+                                <span>All Demand completed!</span>
                             }
                             @if (tasksCount.incomplete !== 0) {
                                 <span
                                     >{{ tasksCount.incomplete }} remaining
-                                    tasks</span
+                                    Demands</span
                                 >
                             }
                         </div>
                     </div>
                     <!-- Actions -->
                     <div class="mt-4 sm:mt-0">
-                        <!-- Add section button -->
-                        <button
-                            mat-flat-button
-                            [color]="'accent'"
-                            (click)="createTask('section')"
-                            [matTooltip]="'Shortcut: Ctrl + .'"
-                        >
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:plus'"
-                            ></mat-icon>
-                            <span class="ml-2 mr-1">Add Section</span>
-                        </button>
                         <!-- Add task button -->
                         <button
                             class="ml-3"
                             mat-flat-button
                             [color]="'primary'"
-                            (click)="createTask('task')"
+                            (click)="createTask()"
                             [matTooltip]="'Shortcut: Ctrl + /'"
                         >
                             <mat-icon
                                 [svgIcon]="'heroicons_outline:plus'"
                             ></mat-icon>
-                            <span class="ml-2 mr-1">Add Task</span>
+                            <span class="ml-2 mr-1">Add Demand</span>
                         </button>
                     </div>
                 </div>
@@ -76,8 +64,6 @@
                     <div
                         class="divide-y"
                         cdkDropList
-                        [cdkDropListData]="tasks"
-                        (cdkDropListDropped)="dropped($event)"
                     >
                         <!-- Task -->
                         @for (
@@ -87,13 +73,8 @@
                         ) {
                             <div
                                 [id]="'task-' + task.id"
-                                class="group w-full select-none dark:hover:bg-hover hover:bg-gray-100"
-                                [ngClass]="{
-                                    'h-12 bg-gray-50 text-lg font-semibold dark:bg-transparent':
-                                        task.type === 'section',
-                                    'h-16': task.type === 'task',
-                                    'text-hint': task.completed,
-                                }"
+                                class="group w-full select-none dark:hover:bg-hover hover:bg-gray-100 h-16"
+                                [ngClass]="{'text-hint': task.completed,}"
                                 [class.border-t]="first"
                                 cdkDrag
                                 [cdkDragLockAxis]="'y'"
@@ -130,7 +111,7 @@
                                     </div>
 
                                     <!-- Complete task button -->
-                                    @if (task.type === 'task') {
+                                    
                                         <button
                                             class="-ml-2.5 mr-2 leading-none"
                                             (click)="toggleCompleted(task)"
@@ -139,21 +120,17 @@
                                             @if (task.completed) {
                                                 <mat-icon
                                                     class="text-primary"
-                                                    [svgIcon]="
-                                                        'heroicons_outline:check-circle'
-                                                    "
+                                                    [svgIcon]="'heroicons_outline:check-circle'"
                                                 ></mat-icon>
                                             }
                                             @if (!task.completed) {
                                                 <mat-icon
                                                     class="text-hint"
-                                                    [svgIcon]="
-                                                        'heroicons_outline:check-circle'
-                                                    "
+                                                    [svgIcon]="'heroicons_outline:check-circle'"
                                                 ></mat-icon>
                                             }
                                         </button>
-                                    }
+                                    
 
                                     <!-- Task link -->
                                     <a
@@ -162,55 +139,20 @@
                                     >
                                         <!-- Title & Placeholder -->
                                         <div class="mr-2 flex-auto truncate">
-                                            @if (task.title) {
-                                                <span>{{ task.title }}</span>
+                                            @if (task.content) {
+                                                <span>{{ task.content }} | user : {{ task.user_id}}</span>
                                             }
-                                            @if (!task.title) {
+                                            @if (!task.content) {
                                                 <span
-                                                    class="text-hint select-none"
-                                                    >{{
-                                                        task.type | titlecase
-                                                    }}
-                                                    title</span
-                                                >
+                                                    class="text-hint select-none">Demand content</span>
                                             }
                                         </div>
-                                        <!-- Priority -->
-                                        @if (task.type === 'task') {
-                                            <div class="mr-3 h-4 w-4">
-                                                <!-- Low -->
-                                                @if (task.priority === 0) {
-                                                    <mat-icon
-                                                        class="text-green-600 icon-size-4 dark:text-green-400"
-                                                        [svgIcon]="
-                                                            'heroicons_mini:arrow-long-down'
-                                                        "
-                                                        [title]="'Low'"
-                                                    ></mat-icon>
-                                                }
-                                                <!-- High -->
-                                                @if (task.priority === 2) {
-                                                    <mat-icon
-                                                        class="text-red-600 icon-size-4 dark:text-red-400"
-                                                        [svgIcon]="
-                                                            'heroicons_mini:arrow-long-up'
-                                                        "
-                                                        [title]="'High'"
-                                                    ></mat-icon>
-                                                }
-                                            </div>
-                                        }
+
                                         <!-- Due date -->
-                                        @if (task.type === 'task') {
-                                            <div
-                                                class="text-secondary whitespace-nowrap text-sm"
-                                            >
-                                                {{
-                                                    task.dueDate
-                                                        | date: 'LLL dd'
-                                                }}
+                                        
+                                            <div class="text-secondary whitespace-nowrap text-sm">Changed : {{task.last_changed| date: 'LLL dd'}}
                                             </div>
-                                        }
+                                        
                                     </a>
                                 </div>
                             </div>
@@ -229,7 +171,7 @@
                         <div
                             class="text-secondary mt-4 text-2xl font-semibold tracking-tight"
                         >
-                            Add a task to start planning!
+                            Add a Demand to start planning!
                         </div>
                     </div>
                 }

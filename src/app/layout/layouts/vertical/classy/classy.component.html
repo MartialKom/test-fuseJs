@@ -77,18 +77,7 @@
         <div class="ml-auto flex items-center space-x-0.5 pl-2 sm:space-x-2">
             <languages></languages>
             <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
-            <search [appearance]="'bar'"></search>
-            <shortcuts></shortcuts>
-            <messages></messages>
-            <button
-                class="lg:hidden"
-                mat-icon-button
-                (click)="quickChat.toggle()"
-            >
-                <mat-icon
-                    [svgIcon]="'heroicons_outline:chat-bubble-left-right'"
-                ></mat-icon>
-            </button>
+
         </div>
     </div>
 
@@ -107,5 +96,3 @@
     </div>-->
 </div>
 
-<!-- Quick chat -->
-<quick-chat #quickChat="quickChat"></quick-chat>

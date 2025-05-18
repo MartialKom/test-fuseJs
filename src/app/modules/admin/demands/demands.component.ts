@@ -7,7 +7,7 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'tasks',
-  templateUrl: './tasks.component.html',
+  templateUrl: './demands.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet],

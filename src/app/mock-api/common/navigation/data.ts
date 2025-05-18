@@ -5,39 +5,39 @@ export const defaultNavigation: FuseNavigationItem[] = [
 
     {
         id   : 'tasks',
-        title: 'Tasks',
+        title: 'Demands',
         type : 'basic',
         icon : 'heroicons_outline:check-circle',
-        link : '/tasks'
+        link : '/demands'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
 
     {
         id   : 'tasks',
-        title: 'Tasks',
+        title: 'Demands',
         type : 'basic',
         icon : 'heroicons_outline:check-circle',
-        link : '/tasks'
+        link : '/demands'
     }
 ];
 export const futuristicNavigation: FuseNavigationItem[] = [
 
     {
         id   : 'tasks',
-        title: 'Tasks',
+        title: 'Demands',
         type : 'basic',
         icon : 'heroicons_outline:check-circle',
-        link : '/tasks'
+        link : '/demands'
     }
 ];
 export const horizontalNavigation: FuseNavigationItem[] = [
 
     {
         id   : 'tasks',
-        title: 'Tasks',
+        title: 'Demands',
         type : 'basic',
         icon : 'heroicons_outline:check-circle',
-        link : '/tasks'
+        link : '/demands'
     }
 ];

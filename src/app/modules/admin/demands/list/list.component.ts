@@ -32,9 +32,10 @@ import {
   FuseVerticalNavigationComponent,
 } from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { TasksService } from '../tasks.service'; 
-import { Tag, Task } from '../tasks.types';
+import { TasksService } from '../demands.service'; 
+
 import { Subject, filter, fromEvent, takeUntil } from 'rxjs';
+import { Demand } from '../demands.types';
 
 @Component({
   selector: 'tasks-list',
@@ -53,7 +54,6 @@ import { Subject, filter, fromEvent, takeUntil } from 'rxjs';
       CdkDragPreview,
       CdkDragHandle,
       RouterLink,
-      TitleCasePipe,
       DatePipe,
   ],
 })
@@ -61,9 +61,8 @@ export class TasksListComponent implements OnInit, OnDestroy {
   @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
 
   drawerMode: 'side' | 'over';
-  selectedTask: Task;
-  tags: Tag[];
-  tasks: Task[];
+  selectedTask: Demand;
+  tasks: Demand[];
   tasksCount: any = {
       completed: 0,
       incomplete: 0,
@@ -93,27 +92,17 @@ export class TasksListComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
       // Get the tags
-      this._tasksService.tags$
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe((tags: Tag[]) => {
-              this.tags = tags;
-
-              // Mark for check
-              this._changeDetectorRef.markForCheck();
-          });
 
       // Get the tasks
       this._tasksService.tasks$
           .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe((tasks: Task[]) => {
+          .subscribe((tasks: Demand[]) => {
               this.tasks = tasks;
 
               // Update the counts
-              this.tasksCount.total = this.tasks.filter(
-                  (task) => task.type === 'task'
-              ).length;
+              this.tasksCount.total = this.tasks.length;
               this.tasksCount.completed = this.tasks.filter(
-                  (task) => task.type === 'task' && task.completed
+                  (task) => task.completed
               ).length;
               this.tasksCount.incomplete =
                   this.tasksCount.total - this.tasksCount.completed;
@@ -140,7 +129,7 @@ export class TasksListComponent implements OnInit, OnDestroy {
 
                       // Update the subtitle of the item
                       menuItem.subtitle =
-                          this.tasksCount.incomplete + ' remaining tasks';
+                          this.tasksCount.incomplete + ' remaining Demand';
 
                       // Refresh the navigation
                       mainNavigationComponent.refresh();
@@ -151,7 +140,7 @@ export class TasksListComponent implements OnInit, OnDestroy {
       // Get the task
       this._tasksService.task$
           .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe((task: Task) => {
+          .subscribe((task: Demand) => {
               this.selectedTask = task;
 
               // Mark for check
@@ -181,15 +170,7 @@ export class TasksListComponent implements OnInit, OnDestroy {
               )
           )
           .subscribe((event: KeyboardEvent) => {
-              // If the '/' pressed
-              if (event.key === '/') {
-                  this.createTask('task');
-              }
-
-              // If the '.' pressed
-              if (event.key === '.') {
-                  this.createTask('section');
-              }
+              this.createTask();
           });
   }
 
@@ -222,9 +203,9 @@ export class TasksListComponent implements OnInit, OnDestroy {
    *
    * @param type
    */
-  createTask(type: 'task' | 'section'): void {
+  createTask(): void {
       // Create the task
-      this._tasksService.createTask(type).subscribe((newTask) => {
+      this._tasksService.createTask().subscribe((newTask) => {
           // Go to the new task
           this._router.navigate(['./', newTask.id], {
               relativeTo: this._activatedRoute,
@@ -241,7 +222,7 @@ export class TasksListComponent implements OnInit, OnDestroy {
    *
    * @param task
    */
-  toggleCompleted(task: Task): void {
+  toggleCompleted(task: Demand): void {
       // Toggle the completed status
       task.completed = !task.completed;
 
@@ -252,25 +233,7 @@ export class TasksListComponent implements OnInit, OnDestroy {
       this._changeDetectorRef.markForCheck();
   }
 
-  /**
-   * Task dropped
-   *
-   * @param event
-   */
-  dropped(event: CdkDragDrop<Task[]>): void {
-      // Move the item in the array
-      moveItemInArray(
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-      );
 
-      // Save the new order
-      this._tasksService.updateTasksOrders(event.container.data).subscribe();
-
-      // Mark for check
-      this._changeDetectorRef.markForCheck();
-  }
 
   /**
    * Track by function for ngFor loops
