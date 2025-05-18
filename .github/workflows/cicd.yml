@@ -50,5 +50,4 @@ jobs:
           docker rm fuse_test
           docker rmi fuse_test:v1
           docker build -t fuse_test:v1 .
-          docker run -p 9009:80 --name fuse_test fuse_test:v1
-          sudo systemctl start digitalx
+          docker run -p -d 9009:4200 --name fuse_test fuse_test:v1
