@@ -17,6 +17,14 @@ export class TasksMockApi {
     constructor(private _fuseMockApiService: FuseMockApiService) {
         // Register Mock API handlers
         this.registerHandlers();
+        let localDemands : any[] = JSON.parse(localStorage.getItem('demands'));
+
+        if(localDemands){
+            this._tasks = localDemands;
+        } else {
+            localStorage.setItem('demands', JSON.stringify(this._tasks));
+        }
+        
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -78,6 +86,7 @@ export class TasksMockApi {
                 // Unshift the new task
                 this._tasks.unshift(newTask);
 
+                this.setLocalDemands();
 
                 return [200, newTask];
             });
@@ -106,6 +115,7 @@ export class TasksMockApi {
                     }
                 });
 
+                this.setLocalDemands();
                 return [200, updatedTask];
             });
 
@@ -122,7 +132,13 @@ export class TasksMockApi {
                 const index = this._tasks.findIndex((item) => item.id === id);
                 this._tasks.splice(index, 1);
 
+                this.setLocalDemands();
                 return [200, true];
             });
+
+    }
+
+    setLocalDemands(){
+        localStorage.setItem("demands", JSON.stringify(this._tasks));
     }
 }

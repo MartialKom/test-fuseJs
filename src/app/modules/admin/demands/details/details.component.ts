@@ -365,6 +365,10 @@ export class TasksDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    refresh(){
+        this.tasks = JSON.parse(localStorage.getItem("demands"));
+    }
+
     /**
      * Track by function for ngFor loops
      *

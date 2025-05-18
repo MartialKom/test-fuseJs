@@ -58,6 +58,8 @@ import { Demand } from '../demands.types';
   ],
 })
 export class TasksListComponent implements OnInit, OnDestroy {
+
+
   @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
 
   drawerMode: 'side' | 'over';
