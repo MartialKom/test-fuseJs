@@ -50,4 +50,4 @@ jobs:
           docker rm fuse_test
           docker rmi fuse_test:v1
           docker build -t fuse_test:v1 .
-          docker run -p -d 9009:4200 --name fuse_test fuse_test:v1
+          docker run -d -p 9009:4200 --name fuse_test fuse_test:v1
