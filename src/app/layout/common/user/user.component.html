@@ -1,20 +1,13 @@
 <!-- Button -->
 <button mat-icon-button [matMenuTriggerFor]="userActions">
     <span class="relative">
-        @if (showAvatar && user.avatar) {
-            <img class="h-7 w-7 rounded-full" [src]="user.avatar" />
-        }
-        @if (!showAvatar || !user.avatar) {
-            <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+        @if (user.picture) {
+            <img class="h-7 w-7 rounded-full" [src]="user.picture" />
         }
         <span
-            class="absolute bottom-0 right-0 h-2 w-2 rounded-full"
+            class="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-green-500"
             [ngClass]="{
-                'mb-px mr-px': !showAvatar || !user.avatar,
-                'bg-green-500': user.status === 'online',
-                'bg-amber-500': user.status === 'away',
-                'bg-red-500': user.status === 'busy',
-                'bg-gray-400': user.status === 'not-visible',
+                'mb-px mr-px': !showAvatar || !user.picture,
             }"
         ></span>
     </span>

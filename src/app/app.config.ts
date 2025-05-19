@@ -17,9 +17,17 @@ import { provideIcons } from 'app/core/icons/icons.provider';
 import { MockApiService } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
+import { provideAuth0 } from '@auth0/auth0-angular';
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideAuth0({
+            domain: 'dev-vgy7lv3fwwx6g55r.us.auth0.com',
+            clientId: '25jHAkTuJ5PCJl1rthOz1TMWkWBvDURy',
+            authorizationParams: {
+              redirect_uri: "https://test-martial.tamaroas.online/demands"
+            }
+          }),
         provideAnimations(),
         provideHttpClient(),
         provideRouter(

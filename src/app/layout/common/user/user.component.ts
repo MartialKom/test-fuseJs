@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
     selector: 'user',
@@ -38,7 +39,8 @@ export class UserComponent implements OnInit, OnDestroy {
     /* eslint-enable @typescript-eslint/naming-convention */
 
     @Input() showAvatar: boolean = true;
-    user: User;
+    
+    user: any;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -48,7 +50,8 @@ export class UserComponent implements OnInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _userService: UserService
+        private _userService: UserService,
+        private _auth: AuthService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -60,9 +63,9 @@ export class UserComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Subscribe to user changes
-        this._userService.user$
+        this._auth.user$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
+            .subscribe((user) => {
                 this.user = user;
 
                 // Mark for check

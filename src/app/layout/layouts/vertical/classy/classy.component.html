@@ -24,22 +24,22 @@
         </div>
         <!-- User -->
         <div class="flex w-full flex-col items-center p-4">
-            <div class="relative h-24 w-24">
-                @if (user.avatar) {
+            <div *ngIf="auth.user$| async as user" class="relative h-24 w-24">
+                @if (user.picture) {
                     <img
                         class="h-full w-full rounded-full"
-                        [src]="user.avatar"
+                        [src]="user.picture"
                         alt="User avatar"
                     />
                 }
-                @if (!user.avatar) {
+                @if (!user.picture) {
                     <mat-icon
                         class="icon-size-24"
                         [svgIcon]="'heroicons_solid:user-circle'"
                     ></mat-icon>
                 }
             </div>
-            <div class="mt-6 flex w-full flex-col items-center justify-center">
+            <div *ngIf="auth.user$| async as user" class="mt-6 flex w-full flex-col items-center justify-center">
                 <div
                     class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"
                 >

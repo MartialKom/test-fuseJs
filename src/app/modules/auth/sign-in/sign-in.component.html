@@ -136,34 +136,32 @@
                     }
                 </button>
 
-                <!-- Separator -->
-                <div class="mt-8 flex items-center">
-                    <div class="mt-px flex-auto border-t"></div>
-                    <div class="text-secondary mx-2">Or continue with</div>
-                    <div class="mt-px flex-auto border-t"></div>
-                </div>
+                                <!-- Separator -->
+                                <div class="mt-8 flex items-center">
+                                    <div class="mt-px flex-auto border-t"></div>
+                                    <div class="text-secondary mx-2">Or</div>
+                                    <div class="mt-px flex-auto border-t"></div>
+                                </div>
 
-                <!-- Single sign-on buttons -->
-                <div class="mt-8 flex items-center space-x-4">
-                    <button class="flex-auto" type="button" mat-stroked-button>
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'feather:facebook'"
-                        ></mat-icon>
-                    </button>
-                    <button class="flex-auto" type="button" mat-stroked-button>
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'feather:twitter'"
-                        ></mat-icon>
-                    </button>
-                    <button class="flex-auto" type="button" mat-stroked-button>
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'feather:github'"
-                        ></mat-icon>
-                    </button>
-                </div>
+                <button
+                class="fuse-mat-button-large mt-6 w-full"
+                mat-flat-button
+                [color]="'accent'"
+                [disabled]="signInForm.disabled"
+                (click)="signWithAuth()"
+            >
+                @if (!signInForm.disabled) {
+                    <span> Sign in with Auth0 </span>
+                }
+                @if (signInForm.disabled) {
+                    <mat-progress-spinner
+                        [diameter]="24"
+                        [mode]="'indeterminate'"
+                    ></mat-progress-spinner>
+                }
+            </button>
+
+
             </form>
         </div>
     </div>

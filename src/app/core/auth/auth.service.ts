@@ -3,12 +3,14 @@ import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { AuthService as AuthOAuthService } from '@auth0/auth0-angular';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
+    private _authO = inject(AuthOAuthService);
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -118,11 +120,13 @@ export class AuthService {
      */
     signOut(): Observable<any> {
         // Remove the access token from the local storage
-        localStorage.removeItem('accessToken');
-
-        // Set the authenticated flag to false
-        this._authenticated = false;
-
+        
+        this._authO.logout({ 
+            logoutParams: {
+              returnTo: "https://test-martial.tamaroas.online/sign-in"
+            }
+          });
+  
         // Return the observable
         return of(true);
     }
@@ -158,21 +162,6 @@ export class AuthService {
      */
     check(): Observable<boolean> {
         // Check if the user is logged in
-        if (this._authenticated) {
-            return of(true);
-        }
-
-        // Check the access token availability
-        if (!this.accessToken) {
-            return of(false);
-        }
-
-        // Check the access token expire date
-        if (AuthUtils.isTokenExpired(this.accessToken)) {
-            return of(false);
-        }
-
-        // If the access token exists, and it didn't expire, sign in using it
-        return this.signInUsingToken();
+        return this._authO.isAuthenticated$;
     }
 }

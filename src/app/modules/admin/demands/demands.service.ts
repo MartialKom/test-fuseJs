@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { v4 as uuidv4 } from 'uuid';
 import {
     BehaviorSubject,
     Observable,
@@ -15,8 +15,7 @@ import {
     throwError,
 } from 'rxjs';
 import { Demand } from './demands.types';
-import { User } from 'app/core/user/user.types';
-import { UserService } from 'app/core/user/user.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Injectable({ providedIn: 'root' })
 export class TasksService {
@@ -25,12 +24,10 @@ export class TasksService {
     private _task: BehaviorSubject<Demand | null> = new BehaviorSubject(null);
     private _tasks: BehaviorSubject<Demand[] | null> = new BehaviorSubject(null);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    user: User;
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient,private _userService: UserService) {}
+    constructor(private _httpClient: HttpClient,private _authO: AuthService) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -104,30 +101,25 @@ export class TasksService {
      * @param type
      */
     createTask(): Observable<Demand> {
-
-        this._userService.user$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((user: User) => {
-            this.user = user;
-
-        });
-
-        let userId : string = this.user.id;
-        return this.tasks$.pipe(
-            take(1),
-            switchMap((tasks) =>
-                this._httpClient
-                    .post<Demand>('api/apps/demands/demand', { userId })
-                    .pipe(
-                        map((newTask) => {
-                            // Update the tasks with the new task
-                            this._tasks.next([newTask, ...tasks]);
-
-                            // Return the new task
-                            return newTask;
-                        })
+        return this._authO.user$.pipe(
+            take(1), // Prendre un seul utilisateur
+            switchMap((data) => {
+                const userId = data.name + "-" + uuidv4(); // Concaténer userId
+                console.log(data);
+                return this.tasks$.pipe(
+                    take(1),
+                    switchMap((tasks) =>
+                        this._httpClient
+                            .post<Demand>('api/apps/demands/demand', { userId })
+                            .pipe(
+                                map((newTask) => {
+                                    this._tasks.next([newTask, ...tasks]);
+                                    return newTask;
+                                })
+                            )
                     )
-            )
+                );
+            })
         );
     }
 
